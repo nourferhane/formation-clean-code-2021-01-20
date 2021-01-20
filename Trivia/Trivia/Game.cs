@@ -4,26 +4,15 @@ using System.Linq;
 
 namespace Trivia
 {
-    ///////////////////////////////////////////////
-    ///                                          //
-    /// Jeu.cs                                   //
-    ///                                          //
-    /// COpyright The TrivaGame Ltd              //
-    ///                                          // 
-    /// Change : 2000-08-17 : add Rock questions //
-    /// Change : 2002-04-01: Formatting          //
-    /// Bug 528491 : Fix penaltybox bug where player is stuck // 
-    ///////////////////////////////////////////////
-
     /// <summary>
     /// The Game
     /// </summary>
     public class Game
     {
-        private const int FIVE = 6;
-        private readonly int[] _places = new int[6];
-        private readonly int[] _purses = new int[6];
-        private readonly bool[] _inPenaltyBox = new bool[FIVE];
+        private const int NUMBER_OF_PLAYER = 6;
+        private readonly int[] _places = new int[NUMBER_OF_PLAYER];
+        private readonly int[] _purses = new int[NUMBER_OF_PLAYER];
+        private readonly bool[] _isInPenaltyBox = new bool[NUMBER_OF_PLAYER];
         private readonly List<string> _players = new List<string>();
         private readonly LinkedList<string> _popQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _scienceQuestions = new LinkedList<string>();
@@ -41,7 +30,6 @@ namespace Trivia
                 _sportQuestions.AddLast(("Sports Question " + i));
                 _rockQuestions.AddLast(CreateRockQuestion(i));
             }
-            //Shuf();
         }
 
         public string CreateRockQuestion(int index)
@@ -49,24 +37,19 @@ namespace Trivia
             return "Rock Question " + index;
         }
 
-        public bool IsPlayable()
-        {
-            return (HowManyPlayers() >= 2);
-        }
-
-        public bool Add(string playerName)
+        public bool AddPlayer(string playerName)
         {
             _players.Add(playerName);
-            _places[HowManyPlayers()] = 0;
-            _purses[HowManyPlayers()] = 0;
-            _inPenaltyBox[HowManyPlayers()] = false;
+            _places[GetNumberOfPlayers()] = 0;
+            _purses[GetNumberOfPlayers()] = 0;
+            _isInPenaltyBox[GetNumberOfPlayers()] = false;
 
             Console.WriteLine(playerName + " was added");
             Console.WriteLine("They are player number " + _players.Count);
             return true;
         }
 
-        public int HowManyPlayers()
+        public int GetNumberOfPlayers()
         {
             return _players.Count;
         }
@@ -76,7 +59,7 @@ namespace Trivia
             Console.WriteLine(_players[_currentPlayer] + " is the current player"); Console.WriteLine("They have rolled a " + roll);
 
 
-            if (_inPenaltyBox[_currentPlayer])
+            if (_isInPenaltyBox[_currentPlayer])
             {
                 if (roll % 2 != 0)
                 {
@@ -119,7 +102,7 @@ namespace Trivia
         /// <returns></returns>
         public bool WasCorrectlyAnswered()
         {
-            if (_inPenaltyBox[_currentPlayer])
+            if (_isInPenaltyBox[_currentPlayer])
             {
                 if (_isGettingOutOfPenaltyBox)
                 {
@@ -130,34 +113,31 @@ namespace Trivia
                             + _purses[_currentPlayer]
                             + " Gold Coins.");
 
-                    var winner = !(_purses[_currentPlayer] == 6);
+                    var winner1 = !(_purses[_currentPlayer] == 6);
                     _currentPlayer++;
                     if (_currentPlayer == _players.Count) _currentPlayer = 0;
 
-                    return winner;
+                    return winner1;
                 }
-                else
-                {
-                    _currentPlayer++;
-                    if (_currentPlayer == _players.Count) _currentPlayer = 0;
-                    return true;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Answer was corrent!!!!");
-                _purses[_currentPlayer]++;
-                Console.WriteLine(_players[_currentPlayer]
-                        + " now has "
-                        + _purses[_currentPlayer]
-                        + " Gold Coins.");
 
-                var winner = !(_purses[_currentPlayer] == 6);
                 _currentPlayer++;
                 if (_currentPlayer == _players.Count) _currentPlayer = 0;
+                return true;
 
-                return winner;
             }
+
+            Console.WriteLine("Answer was corrent!!!!");
+            _purses[_currentPlayer]++;
+            Console.WriteLine(_players[_currentPlayer]
+                    + " now has "
+                    + _purses[_currentPlayer]
+                    + " Gold Coins.");
+
+            var winner2 = !(_purses[_currentPlayer] == 6);
+            _currentPlayer++;
+            if (_currentPlayer == _players.Count) _currentPlayer = 0;
+
+            return winner2;
         }
 
         /// <summary>
@@ -168,7 +148,7 @@ namespace Trivia
         {
             Console.WriteLine("Question was incorrectly answered");
             Console.WriteLine(_players[_currentPlayer] + " was sent to the penalty box");
-            _inPenaltyBox[_currentPlayer] = true;
+            _isInPenaltyBox[_currentPlayer] = true;
 
             _currentPlayer++;
             if (_currentPlayer == _players.Count) _currentPlayer = 0;
@@ -198,7 +178,6 @@ namespace Trivia
                 Console.WriteLine(_rockQuestions.First());
                 _rockQuestions.RemoveFirst();
             }
-            //Shuf();
         }
 
         private string CurrentCategory()
@@ -213,15 +192,6 @@ namespace Trivia
             if (_places[_currentPlayer] == 6) return "Sports";
             if (_places[_currentPlayer] == 10) return "Sports";
             return "Rock";
-        }
-
-        private void Shuf()
-        {
-            var shufpower = from s in _popQuestions
-                            from h in _scienceQuestions
-                            let u = new { s, h }
-                            select u;
-            _sportQuestions.Zip(shufpower).ToList().Sort((a, b) => Math.Abs(a.First.Length - (int)b.Second.h[0]));
         }
     }
 
