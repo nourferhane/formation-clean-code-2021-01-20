@@ -11,6 +11,8 @@ namespace Trivia
     {
         private const int NUMBER_OF_PLAYER = 6;
         private const int MAX_QUESTIONS_BY_CATEGORY = 50;
+        private const int COINS_NEEDED_TO_WIN = 6;
+        private const int NUMBER_OF_PLACES_IN_BOARD = 12;
         private readonly int[] _places = new int[NUMBER_OF_PLAYER];
         private readonly int[] _purses = new int[NUMBER_OF_PLAYER];
         private readonly bool[] _isInPenaltyBox = new bool[NUMBER_OF_PLAYER];
@@ -52,8 +54,8 @@ namespace Trivia
 
         public void Roll(int roll)
         {
-            Console.WriteLine(_players[_currentPlayer] + " is the current player"); Console.WriteLine("They have rolled a " + roll);
-
+            Console.WriteLine(_players[_currentPlayer] + " is the current player");
+            Console.WriteLine("They have rolled a " + roll);
 
             if (_isInPenaltyBox[_currentPlayer])
             {
@@ -65,7 +67,7 @@ namespace Trivia
                     Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
                     // add roll to place
                     _places[_currentPlayer] = _places[_currentPlayer] + roll;
-                    if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - 12;
+                    if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - NUMBER_OF_PLACES_IN_BOARD;
 
                     Console.WriteLine(_players[_currentPlayer]
                             + "'s new location is "
@@ -82,7 +84,7 @@ namespace Trivia
             else
             {
                 _places[_currentPlayer] = _places[_currentPlayer] + roll;
-                if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - 12;
+                if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - NUMBER_OF_PLACES_IN_BOARD;
 
                 Console.WriteLine(_players[_currentPlayer]
                         + "'s new location is "
@@ -109,11 +111,11 @@ namespace Trivia
                             + _purses[_currentPlayer]
                             + " Gold Coins.");
 
-                    var winner1 = !(_purses[_currentPlayer] == 6);
+                    var doesGameContinue = _purses[_currentPlayer] != COINS_NEEDED_TO_WIN;
                     _currentPlayer++;
                     if (_currentPlayer == _players.Count) _currentPlayer = 0;
 
-                    return winner1;
+                    return doesGameContinue;
                 }
 
                 _currentPlayer++;
@@ -129,11 +131,11 @@ namespace Trivia
                     + _purses[_currentPlayer]
                     + " Gold Coins.");
 
-            var winner2 = !(_purses[_currentPlayer] == 6);
+            var doesGameContinue2 = _purses[_currentPlayer] != COINS_NEEDED_TO_WIN;
             _currentPlayer++;
             if (_currentPlayer == _players.Count) _currentPlayer = 0;
 
-            return winner2;
+            return doesGameContinue2;
         }
 
         /// <summary>
