@@ -10,6 +10,7 @@ namespace Trivia
     public class Game
     {
         private const int NUMBER_OF_PLAYER = 6;
+        private const int MAX_QUESTIONS_BY_CATEGORY = 50;
         private readonly int[] _places = new int[NUMBER_OF_PLAYER];
         private readonly int[] _purses = new int[NUMBER_OF_PLAYER];
         private readonly bool[] _isInPenaltyBox = new bool[NUMBER_OF_PLAYER];
@@ -23,18 +24,13 @@ namespace Trivia
 
         public Game()
         {
-            for (var i = 0; i < 50; i++)
+            for (var i = 0; i < MAX_QUESTIONS_BY_CATEGORY; i++)
             {
                 _popQuestions.AddLast("Pop Question " + i);
                 _scienceQuestions.AddLast(("Science Question " + i));
                 _sportQuestions.AddLast(("Sports Question " + i));
-                _rockQuestions.AddLast(CreateRockQuestion(i));
+                _rockQuestions.AddLast("Rock Question " + i);
             }
-        }
-
-        public string CreateRockQuestion(int index)
-        {
-            return "Rock Question " + index;
         }
 
         public bool AddPlayer(string playerName)
@@ -74,7 +70,7 @@ namespace Trivia
                     Console.WriteLine(_players[_currentPlayer]
                             + "'s new location is "
                             + _places[_currentPlayer]);
-                    Console.WriteLine("The category is " + CurrentCategory());
+                    Console.WriteLine("The category is " + GetCurrentQuestionCategory());
                     AskQuestion();
                 }
                 else
@@ -91,7 +87,7 @@ namespace Trivia
                 Console.WriteLine(_players[_currentPlayer]
                         + "'s new location is "
                         + _places[_currentPlayer]);
-                Console.WriteLine("The category is " + CurrentCategory());
+                Console.WriteLine("The category is " + GetCurrentQuestionCategory());
                 AskQuestion();
             }
         }
@@ -100,7 +96,7 @@ namespace Trivia
         /// To call when the answer is right
         /// </summary>
         /// <returns></returns>
-        public bool WasCorrectlyAnswered()
+        public bool ProcessCorrectAnswer()
         {
             if (_isInPenaltyBox[_currentPlayer])
             {
@@ -141,10 +137,10 @@ namespace Trivia
         }
 
         /// <summary>
-        /// To call when the answer is right
+        /// To call when the answer is Wrong
         /// </summary>
         /// <returns></returns>
-        public bool WrongAnswer()
+        public bool ProcessWrongAnswer()
         {
             Console.WriteLine("Question was incorrectly answered");
             Console.WriteLine(_players[_currentPlayer] + " was sent to the penalty box");
@@ -158,29 +154,29 @@ namespace Trivia
 
         private void AskQuestion()
         {
-            if (CurrentCategory() == "Pop")
+            if (GetCurrentQuestionCategory() == "Pop")
             {
                 Console.WriteLine(_popQuestions.First());
                 _popQuestions.RemoveFirst();
             }
-            if (CurrentCategory() == "Science")
+            if (GetCurrentQuestionCategory() == "Science")
             {
                 Console.WriteLine(_scienceQuestions.First());
                 _scienceQuestions.RemoveFirst();
             }
-            if (CurrentCategory() == "Sports")
+            if (GetCurrentQuestionCategory() == "Sports")
             {
                 Console.WriteLine(_sportQuestions.First());
                 _sportQuestions.RemoveFirst();
             }
-            if (CurrentCategory() == "Rock")
+            if (GetCurrentQuestionCategory() == "Rock")
             {
                 Console.WriteLine(_rockQuestions.First());
                 _rockQuestions.RemoveFirst();
             }
         }
 
-        private string CurrentCategory()
+        private string GetCurrentQuestionCategory()
         {
             if (_places[_currentPlayer] == 0) return "Pop";
             if (_places[_currentPlayer] == 4) return "Pop";
