@@ -92,13 +92,16 @@ namespace Tests
         [Fact]
         public void Can_Add_Ten_Players()
         {
+            //Arrange
             var game = new Game();
 
+            //Act
             for (int i = 0; i < 10; i++)
             {
                 game.AddPlayer("Player" + i);
             }
 
+            //Assert
             Assert.Equal(10, game.GetNumberOfPlayers());
         }
     }
