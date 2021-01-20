@@ -20,9 +20,9 @@ namespace Trivia
         private readonly LinkedList<string> _popQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _scienceQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _sportQuestions = new LinkedList<string>();
+        private readonly LinkedList<string> _rockQuestions = new LinkedList<string>();
         private int _currentPlayer;
-        private bool _isGettingOutOfPenaltyBox;
-        public LinkedList<string> _rockQuestions = new LinkedList<string>();
+        private bool _isGettingOutOfPenaltyBox;        
 
         public Game()
         {
@@ -60,12 +60,9 @@ namespace Trivia
             if (_isInPenaltyBox[_currentPlayer])
             {
                 if (roll % 2 != 0)
-                {
-                    //User is getting out of penalty box
-                    _isGettingOutOfPenaltyBox = true;
-                    //Write that user is getting out
-                    Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
-                    // add roll to place
+                {                    
+                    _isGettingOutOfPenaltyBox = true;                    
+                    Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");                   
                     _places[_currentPlayer] = _places[_currentPlayer] + roll;
                     if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - NUMBER_OF_PLACES_IN_BOARD;
 
@@ -97,7 +94,7 @@ namespace Trivia
         /// <summary>
         /// To call when the answer is right
         /// </summary>
-        /// <returns></returns>
+        /// <returns>if true, the game should continue</returns>
         public bool ProcessCorrectAnswer()
         {
             if (_isInPenaltyBox[_currentPlayer])
@@ -141,7 +138,7 @@ namespace Trivia
         /// <summary>
         /// To call when the answer is Wrong
         /// </summary>
-        /// <returns></returns>
+        /// <returns>always return true because game continues</returns>
         public bool ProcessWrongAnswer()
         {
             Console.WriteLine("Question was incorrectly answered");
@@ -150,31 +147,30 @@ namespace Trivia
 
             _currentPlayer++;
             if (_currentPlayer == _players.Count) _currentPlayer = 0;
-            //Must alwys return false 
+             
             return true;
         }
 
         private void AskQuestion()
         {
-            if (GetCurrentQuestionCategory() == "Pop")
+            switch (GetCurrentQuestionCategory())
             {
-                Console.WriteLine(_popQuestions.First());
-                _popQuestions.RemoveFirst();
-            }
-            if (GetCurrentQuestionCategory() == "Science")
-            {
-                Console.WriteLine(_scienceQuestions.First());
-                _scienceQuestions.RemoveFirst();
-            }
-            if (GetCurrentQuestionCategory() == "Sports")
-            {
-                Console.WriteLine(_sportQuestions.First());
-                _sportQuestions.RemoveFirst();
-            }
-            if (GetCurrentQuestionCategory() == "Rock")
-            {
-                Console.WriteLine(_rockQuestions.First());
-                _rockQuestions.RemoveFirst();
+                case "Pop":
+                    Console.WriteLine(_popQuestions.First());
+                    _popQuestions.RemoveFirst();
+                    break;
+                case "Science":
+                    Console.WriteLine(_scienceQuestions.First());
+                    _scienceQuestions.RemoveFirst();
+                    break;
+                case "Sports":
+                    Console.WriteLine(_sportQuestions.First());
+                    _sportQuestions.RemoveFirst();
+                    break;
+                case "Rock":
+                    Console.WriteLine(_rockQuestions.First());
+                    _rockQuestions.RemoveFirst();
+                    break;
             }
         }
 
