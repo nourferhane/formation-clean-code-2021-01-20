@@ -22,7 +22,7 @@ namespace Trivia
         private readonly LinkedList<string> _sportQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _rockQuestions = new LinkedList<string>();
         private int _currentPlayer;
-        private bool _isGettingOutOfPenaltyBox;        
+        private bool _isGettingOutOfPenaltyBox;
 
         public Game()
         {
@@ -60,9 +60,9 @@ namespace Trivia
             if (_isInPenaltyBox[_currentPlayer])
             {
                 if (roll % 2 != 0)
-                {                    
-                    _isGettingOutOfPenaltyBox = true;                    
-                    Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");                   
+                {
+                    _isGettingOutOfPenaltyBox = true;
+                    Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
                     _places[_currentPlayer] = _places[_currentPlayer] + roll;
                     if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - NUMBER_OF_PLACES_IN_BOARD;
 
@@ -147,45 +147,34 @@ namespace Trivia
 
             _currentPlayer++;
             if (_currentPlayer == _players.Count) _currentPlayer = 0;
-             
+
             return true;
         }
 
         private void AskQuestion()
         {
-            switch (GetCurrentQuestionCategory())
+            LinkedList<string> currentList = (GetCurrentQuestionCategory()) switch
             {
-                case "Pop":
-                    Console.WriteLine(_popQuestions.First());
-                    _popQuestions.RemoveFirst();
-                    break;
-                case "Science":
-                    Console.WriteLine(_scienceQuestions.First());
-                    _scienceQuestions.RemoveFirst();
-                    break;
-                case "Sports":
-                    Console.WriteLine(_sportQuestions.First());
-                    _sportQuestions.RemoveFirst();
-                    break;
-                case "Rock":
-                    Console.WriteLine(_rockQuestions.First());
-                    _rockQuestions.RemoveFirst();
-                    break;
-            }
+                "Pop" => _popQuestions,
+                "Science" => _scienceQuestions,
+                "Sports" => _sportQuestions,
+                "Rock" => _rockQuestions,
+                _ => throw new Exception(),
+            };
+
+            Console.WriteLine(currentList.First());
+            currentList.RemoveFirst();
         }
 
         private string GetCurrentQuestionCategory()
         {
-            if (_places[_currentPlayer] == 0) return "Pop";
-            if (_places[_currentPlayer] == 4) return "Pop";
-            if (_places[_currentPlayer] == 8) return "Pop";
-            if (_places[_currentPlayer] == 1) return "Science";
-            if (_places[_currentPlayer] == 5) return "Science";
-            if (_places[_currentPlayer] == 9) return "Science";
-            if (_places[_currentPlayer] == 2) return "Sports";
-            if (_places[_currentPlayer] == 6) return "Sports";
-            if (_places[_currentPlayer] == 10) return "Sports";
-            return "Rock";
+            return (_places[_currentPlayer] % 4) switch
+            {
+                0 => "Pop",
+                1 => "Science",
+                2 => "Sports",
+                _ => "Rock"
+            };
         }
     }
 
