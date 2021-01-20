@@ -88,5 +88,18 @@ namespace Tests
             game.ProcessCorrectAnswer();
             Approvals.Verify(fakeconsole.ToString());
         }
+
+        [Fact]
+        public void Can_Add_Ten_Players()
+        {
+            var game = new Game();
+
+            for (int i = 0; i < 10; i++)
+            {
+                game.AddPlayer("Player" + i);
+            }
+
+            Assert.Equal(10, game.GetNumberOfPlayers());
+        }
     }
 }

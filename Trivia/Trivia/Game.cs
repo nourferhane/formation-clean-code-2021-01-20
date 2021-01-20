@@ -17,10 +17,10 @@ namespace Trivia
         private readonly int[] _purses = new int[NUMBER_OF_PLAYER];
         private readonly bool[] _isInPenaltyBox = new bool[NUMBER_OF_PLAYER];
         private readonly List<string> _players = new List<string>();
-        private readonly LinkedList<string> _popQuestions = new LinkedList<string>();
-        private readonly LinkedList<string> _scienceQuestions = new LinkedList<string>();
-        private readonly LinkedList<string> _sportQuestions = new LinkedList<string>();
-        private readonly LinkedList<string> _rockQuestions = new LinkedList<string>();
+        private readonly Queue<string> _popQuestions = new Queue<string>();
+        private readonly Queue<string> _scienceQuestions = new Queue<string>();
+        private readonly Queue<string> _sportQuestions = new Queue<string>();
+        private readonly Queue<string> _rockQuestions = new Queue<string>();
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
 
@@ -28,10 +28,10 @@ namespace Trivia
         {
             for (var i = 0; i < MAX_QUESTIONS_BY_CATEGORY; i++)
             {
-                _popQuestions.AddLast("Pop Question " + i);
-                _scienceQuestions.AddLast(("Science Question " + i));
-                _sportQuestions.AddLast(("Sports Question " + i));
-                _rockQuestions.AddLast("Rock Question " + i);
+                _popQuestions.Enqueue("Pop Question " + i);
+                _scienceQuestions.Enqueue(("Science Question " + i));
+                _sportQuestions.Enqueue(("Sports Question " + i));
+                _rockQuestions.Enqueue("Rock Question " + i);
             }
         }
 
@@ -153,17 +153,15 @@ namespace Trivia
 
         private void AskQuestion()
         {
-            LinkedList<string> currentList = (GetCurrentQuestionCategory()) switch
+            var currentQueue = (GetCurrentQuestionCategory()) switch
             {
                 "Pop" => _popQuestions,
                 "Science" => _scienceQuestions,
                 "Sports" => _sportQuestions,
-                "Rock" => _rockQuestions,
-                _ => throw new Exception(),
+                _ => _rockQuestions
             };
 
-            Console.WriteLine(currentList.First());
-            currentList.RemoveFirst();
+            Console.WriteLine(currentQueue.Dequeue());
         }
 
         private string GetCurrentQuestionCategory()
