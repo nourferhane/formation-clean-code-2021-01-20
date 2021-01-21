@@ -45,35 +45,39 @@ namespace Trivia
             Console.WriteLine(GetPlayerName() + " is the current player");
             Console.WriteLine("They have rolled a " + roll);
 
+            if (ManagePlayerPenalty(roll))
+            {
+                Move(roll);
+                AskQuestion();
+            }
+        }
+
+        private void Move(int roll)
+        {
+            GetCurrentPlayer().Move(roll);
+            Console.WriteLine(GetPlayerName()
+                + "'s new location is "
+                + GetCurrentPlayer().Place);
+        }
+
+        private bool ManagePlayerPenalty(int roll)
+        {
             if (GetCurrentPlayer().IsInPenaltyBox)
             {
                 if (roll % 2 != 0)
                 {
                     _isGettingOutOfPenaltyBox = true;
                     Console.WriteLine(GetPlayerName() + " is getting out of the penalty box");
-                    GetCurrentPlayer().Move(roll);
-
-                    Console.WriteLine(GetPlayerName()
-                            + "'s new location is "
-                            + GetCurrentPlayer().Place);
-                    Console.WriteLine("The category is " + GetCurrentQuestionCategory());
-                    AskQuestion();
+                    return true;
                 }
                 else
                 {
                     Console.WriteLine(GetPlayerName() + " is not getting out of the penalty box");
                     _isGettingOutOfPenaltyBox = false;
+                    return false;
                 }
             }
-            else
-            {
-                GetCurrentPlayer().Move(roll);
-                Console.WriteLine(GetPlayerName()
-                        + "'s new location is "
-                        + GetCurrentPlayer().Place);
-                Console.WriteLine("The category is " + GetCurrentQuestionCategory());
-                AskQuestion();
-            }
+            return true;
         }
 
         private string GetPlayerName() => GetCurrentPlayer().Name;
@@ -154,6 +158,7 @@ namespace Trivia
 
         private void AskQuestion()
         {
+            Console.WriteLine("The category is " + GetCurrentQuestionCategory());
             var currentQueue = (GetCurrentQuestionCategory()) switch
             {
                 "Pop" => _popQuestions,

@@ -12,12 +12,12 @@
 
         public int Place { get; set; }
 
-        internal void EarnCoin()
+        public void EarnCoin()
         {
             Purse++;
         }
 
-        internal void Move(int roll)
+        public void Move(int roll)
         {
             Place += roll;
             if (Place > 11)
