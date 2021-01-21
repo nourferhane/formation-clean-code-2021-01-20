@@ -40,7 +40,7 @@ namespace Trivia
 
         public int GetNumberOfPlayers() => _players.Count;
 
-        public void Roll(int roll)
+        public void Play(int roll)
         {
             Console.WriteLine(GetPlayerName() + " is the current player");
             Console.WriteLine("They have rolled a " + roll);
@@ -70,12 +70,10 @@ namespace Trivia
                     Console.WriteLine(GetPlayerName() + " is getting out of the penalty box");
                     return true;
                 }
-                else
-                {
-                    Console.WriteLine(GetPlayerName() + " is not getting out of the penalty box");
-                    _isGettingOutOfPenaltyBox = false;
-                    return false;
-                }
+
+                Console.WriteLine(GetPlayerName() + " is not getting out of the penalty box");
+                _isGettingOutOfPenaltyBox = false;
+                return false;
             }
             return true;
         }
