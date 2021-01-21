@@ -2,7 +2,7 @@
 
 namespace Parrot
 {
-    public class NorwegianBlueParrot : IParrot
+    public class NorwegianBlueParrot : ICanGiveSpeed
     {
         private bool _isNailed;
         private readonly double _voltage;

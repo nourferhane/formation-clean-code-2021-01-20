@@ -1,6 +1,6 @@
 ﻿namespace Parrot
 {
-    interface IParrot
+    public interface ICanGiveSpeed
     {
         double GetSpeed();
     }
