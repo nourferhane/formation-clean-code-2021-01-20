@@ -4,8 +4,6 @@ namespace Trivia
 {
     public class GameRunner
     {
-        private static bool _notAWinner;
-
         public static void Main(string[] args)
         {
             var aGame = new Game();
@@ -16,19 +14,20 @@ namespace Trivia
 
             var rand = new Random();
 
+            bool _doesGameContinue;
             do
             {
                 aGame.Play(rand.Next(5) + 1);
 
                 if (rand.Next(9) == 7)
                 {
-                    _notAWinner = aGame.ProcessCorrectAnswer();
+                    _doesGameContinue = aGame.ProcessCorrectAnswer();
                 }
                 else
                 {
-                    _notAWinner = aGame.ProcessWrongAnswer();
+                    _doesGameContinue = aGame.ProcessWrongAnswer();
                 }
-            } while (_notAWinner);
+            } while (_doesGameContinue);
         }
     }
 }

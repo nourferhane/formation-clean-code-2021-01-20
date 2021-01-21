@@ -44,7 +44,7 @@ namespace Trivia
             Console.WriteLine(GetPlayerName() + " is the current player");
             Console.WriteLine("They have rolled a " + roll);
 
-            if (ManagePlayerPenalty(roll))
+            if (!GetCurrentPlayer().IsInPenaltyBox || ManagePlayerPenalty(roll))
             {
                 Move(roll);
                 AskQuestion();
@@ -61,19 +61,15 @@ namespace Trivia
 
         private bool ManagePlayerPenalty(int roll)
         {
-            if (GetCurrentPlayer().IsInPenaltyBox)
+            if (roll % 2 != 0)
             {
-                if (roll % 2 != 0)
-                {
-                    GetCurrentPlayer().IsInPenaltyBox = false;
-                    Console.WriteLine(GetPlayerName() + " is getting out of the penalty box");
-                    return true;
-                }
-
-                Console.WriteLine(GetPlayerName() + " is not getting out of the penalty box");
-                return false;
+                GetCurrentPlayer().GetOutPenaltyBox();
+                Console.WriteLine(GetPlayerName() + " is getting out of the penalty box");
+                return true;
             }
-            return true;
+
+            Console.WriteLine(GetPlayerName() + " is not getting out of the penalty box");
+            return false;
         }
 
         private string GetPlayerName() => GetCurrentPlayer().Name;
@@ -88,11 +84,7 @@ namespace Trivia
         {
             if (GetCurrentPlayer().IsInPenaltyBox)
             {
-                _currentPlayer++;
-                if (_currentPlayer == _players.Count)
-                {
-                    _currentPlayer = 0;
-                }
+                NextPlayer();
                 return true;
             }
 
@@ -103,14 +95,19 @@ namespace Trivia
                     + GetCurrentPlayer().Purse
                     + " Gold Coins.");
 
-            var doesGameContinue2 = GetCurrentPlayer().Purse != COINS_NEEDED_TO_WIN;
+            var doesGameContinue = GetCurrentPlayer().Purse != COINS_NEEDED_TO_WIN;
+            NextPlayer();
+
+            return doesGameContinue;
+        }
+
+        private void NextPlayer()
+        {
             _currentPlayer++;
             if (_currentPlayer == _players.Count)
             {
                 _currentPlayer = 0;
             }
-
-            return doesGameContinue2;
         }
 
         /// <summary>
@@ -121,13 +118,9 @@ namespace Trivia
         {
             Console.WriteLine("Question was incorrectly answered");
             Console.WriteLine(GetPlayerName() + " was sent to the penalty box");
-            GetCurrentPlayer().IsInPenaltyBox = true;
+            GetCurrentPlayer().ThrowInPenaltyBox();
 
-            _currentPlayer++;
-            if (_currentPlayer == _players.Count)
-            {
-                _currentPlayer = 0;
-            }
+            NextPlayer();
 
             return true;
         }

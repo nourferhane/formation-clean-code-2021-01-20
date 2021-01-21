@@ -8,7 +8,7 @@
 
         public int Purse { get; private set; }
 
-        public bool IsInPenaltyBox { get; set; }
+        public bool IsInPenaltyBox { get; private set; }
 
         public int Place { get; set; }
 
@@ -25,5 +25,9 @@
                 Place -= NUMBER_OF_PLACES_IN_BOARD;
             }
         }
+
+        public void ThrowInPenaltyBox() => IsInPenaltyBox = true;
+
+        public void GetOutPenaltyBox() => IsInPenaltyBox = false;
     }
 }
