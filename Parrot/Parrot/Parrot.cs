@@ -2,7 +2,7 @@
 
 namespace Parrot
 {
-    public class Parrot
+    public class Parrot : IParrot
     {
         private readonly bool _isNailed;
         private readonly int _numberOfCoconuts;
@@ -21,8 +21,6 @@ namespace Parrot
         {
             switch (_type)
             {
-                case ParrotTypeEnum.EUROPEAN:
-                    return GetBaseSpeed();
                 case ParrotTypeEnum.AFRICAN:
                     return Math.Max(0, GetBaseSpeed() - GetLoadFactor() * _numberOfCoconuts);
                 case ParrotTypeEnum.NORWEGIAN_BLUE:
