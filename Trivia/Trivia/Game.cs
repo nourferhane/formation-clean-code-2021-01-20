@@ -16,7 +16,6 @@ namespace Trivia
         private readonly Queue<string> _sportQuestions = new Queue<string>();
         private readonly Queue<string> _rockQuestions = new Queue<string>();
         private int _currentPlayer;
-        private bool _isGettingOutOfPenaltyBox;
 
         public Game()
         {
@@ -66,13 +65,12 @@ namespace Trivia
             {
                 if (roll % 2 != 0)
                 {
-                    _isGettingOutOfPenaltyBox = true;
+                    GetCurrentPlayer().IsInPenaltyBox = false;
                     Console.WriteLine(GetPlayerName() + " is getting out of the penalty box");
                     return true;
                 }
 
                 Console.WriteLine(GetPlayerName() + " is not getting out of the penalty box");
-                _isGettingOutOfPenaltyBox = false;
                 return false;
             }
             return true;
@@ -90,35 +88,15 @@ namespace Trivia
         {
             if (GetCurrentPlayer().IsInPenaltyBox)
             {
-                if (_isGettingOutOfPenaltyBox)
-                {
-                    Console.WriteLine("Answer was correct!!!!");
-                    GetCurrentPlayer().EarnCoin();
-                    Console.WriteLine(GetPlayerName()
-                            + " now has "
-                            + GetCurrentPlayer().Purse
-                            + " Gold Coins.");
-
-                    var doesGameContinue = GetCurrentPlayer().Purse != COINS_NEEDED_TO_WIN;
-                    _currentPlayer++;
-                    if (_currentPlayer == _players.Count)
-                    {
-                        _currentPlayer = 0;
-                    }
-
-                    return doesGameContinue;
-                }
-
                 _currentPlayer++;
                 if (_currentPlayer == _players.Count)
                 {
                     _currentPlayer = 0;
                 }
                 return true;
-
             }
 
-            Console.WriteLine("Answer was corrent!!!!");
+            Console.WriteLine("Answer was correct!!!!");
             GetCurrentPlayer().EarnCoin();
             Console.WriteLine(GetPlayerName()
                     + " now has "
